@@ -1,0 +1,30 @@
+{
+  "name": "gold-price-tracker-server",
+  "version": "1.0.0",
+  "description": "Server for real-time gold price tracker application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "start:auto": "node server.js --mode=auto",
+    "start:manual": "node server.js --mode=manual"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "node-fetch": "^2.6.9",
+    "path": "^0.12.7",
+    "redis": "^5.0.1",
+    "sequelize": "^6.37.7",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
