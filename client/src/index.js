@@ -1,0 +1,19 @@
+const express = require('express');
+const path = require('path');
+
+const app = express();
+const port = 3005;
+
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Serve the main page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Client application running on port ${port}`);
+    console.log(`Open http://localhost:${port} in your browser to view gold prices`);
+}); 

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản lý Giá Vàng</title>
+    <style>
+        :root {
+            --main-bg-color: #f7f7f7;
+            --gold-color: #D4AF37;
+            --gold-hover: #BF9D30;
+            --text-color: #333;
+            --border-color: #ddd;
+            --up-color: #28a745;
+            --down-color: #dc3545;
+            --admin-color: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--main-bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: var(--admin-color);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        .gold-prices {
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--admin-color);
+            color: white;
+        }
+
+        tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--admin-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-refresh {
+            background-color: var(--up-color);
+            margin-right: 10px;
+        }
+
+        .btn-refresh:hover {
+            background-color: #218838;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--up-color);
+            border: 1px solid var(--up-color);
+        }
+
+        .error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--down-color);
+            border: 1px solid var(--down-color);
+        }
+
+        .last-update {
+            text-align: center;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .actions {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Quản Lý Giá Vàng</h1>
+        <p>Trang quản trị cập nhật giá vàng</p>
+    </div>
+
+    <div class="container">
+        <div class="last-update">
+            Cập nhật lần cuối: <span id="last-update">Đang tải...</span>
+        </div>
+
+        <div class="actions">
+            <button id="refresh-btn" class="btn btn-refresh">Làm mới dữ liệu</button>
+            <button id="update-btn" class="btn">Cập nhật giá vàng</button>
+        </div>
+
+        <div id="status-message" class="status" style="display: none;"></div>
+
+        <div class="gold-prices">
+            <table id="gold-prices-table">
+                <thead>
+                    <tr>
+                        <th>Loại vàng</th>
+                        <th>Giá hiện tại (VND)</th>
+                        <th>Giá mới (VND)</th>
+                    </tr>
+                </thead>
+                <tbody id="gold-prices-body">
+                    <!-- Gold price rows will be generated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 Quản Lý Giá Vàng Việt Nam - Admin Panel</p>
+        </div>
+    </div>
+
+    <script>
+        // Store current prices
+        let currentPrices = {};
+        
+        const goldTypes = {
+            'sjc': 'Vàng SJC',
+            'sjc_nhan': 'Nhẫn SJC',
+            '24k': 'Vàng 24K',
+            '18k': 'Vàng 18K',
+            '14k': 'Vàng 14K',
+            '9k': 'Vàng 9K'
+        };
+
+        // Format price with commas as thousand separators
+        function formatPrice(price) {
+            return parseInt(price).toLocaleString('vi-VN');
+        }
+
+        // Create table rows for each gold type
+        function createPriceRows(prices) {
+            const tbody = document.getElementById('gold-prices-body');
+            tbody.innerHTML = '';
+            
+            for (const [key, label] of Object.entries(goldTypes)) {
+                const tr = document.createElement('tr');
+                const currentPrice = prices[key] || '0';
+                
+                tr.innerHTML = `
+                    <td>${label}</td>
+                    <td>${formatPrice(currentPrice)} VND</td>
+                    <td>
+                        <input type="number" id="input-${key}" value="${currentPrice}" min="0" step="1000">
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            }
+        }
+
+        // Show status message
+        function showStatus(message, isSuccess = true) {
+            const statusElement = document.getElementById('status-message');
+            statusElement.textContent = message;
+            statusElement.className = `status ${isSuccess ? 'success' : 'error'}`;
+            statusElement.style.display = 'block';
+            
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Fetch the latest gold prices
+        async function fetchGoldPrices() {
+            try {
+                const response = await fetch('/api/gold-prices');
+                if (response.ok) {
+                    const data = await response.json();
+                    currentPrices = data;
+                    createPriceRows(data);
+                    
+                    const now = new Date();
+                    document.getElementById('last-update').textContent = now.toLocaleString('vi-VN');
+                } else {
+                    showStatus('Failed to fetch gold prices', false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('Error fetching gold prices: ' + error.message, false);
+            }
+        }
+
+        // Update gold prices
+        async function updateGoldPrices() {
+            try {
+                const prices = {};
+                
+                // Collect values from inputs
+                for (const key of Object.keys(goldTypes)) {
+                    const input = document.getElementById(`input-${key}`);
+                    prices[key] = input.value;
+                }
+                
+                const response = await fetch('/api/update-gold', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prices }),
+                });
+                
+                if (response.ok) {
+                    showStatus('Cập nhật giá vàng thành công!');
+                    await fetchGoldPrices(); // Refresh the data
+                } else {
+                    showStatus('Không thể cập nhật giá vàng', false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('Lỗi cập nhật giá vàng: ' + error.message, false);
+            }
+        }
+
+        // Initialize the page
+        function init() {
+            fetchGoldPrices();
+            
+            // Set up event listeners
+            document.getElementById('refresh-btn').addEventListener('click', fetchGoldPrices);
+            document.getElementById('update-btn').addEventListener('click', updateGoldPrices);
+        }
+
+        // Start the application
+        window.onload = init;
+    </script>
+</body>
+</html> 

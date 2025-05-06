@@ -2,12 +2,13 @@
 
 Ứng dụng này cho phép người dùng theo dõi giá vàng Việt Nam theo thời gian thực, với các loại vàng khác nhau bao gồm SJC, vàng nhẫn SJC, và vàng các loại 24K, 18K, 14K, 9K.
 
-## Tính năng
 
-- Hiển thị giá vàng theo thời gian thực với cập nhật tự động
-- Theo dõi thay đổi giá (tăng/giảm) với hiệu ứng trực quan
-- Giao diện đẹp, thân thiện với người dùng và responsive
-- Cập nhật dữ liệu mỗi 2 giây
+## Cấu trúc ứng dụng
+
+Ứng dụng được chia thành hai phần chính:
+
+1. **Server**: Chịu trách nhiệm lưu trữ và quản lý dữ liệu giá vàng, cung cấp API và giao diện admin
+2. **Client**: Ứng dụng web hiển thị giá vàng cho người dùng cuối
 
 ## Công nghệ sử dụng
 
@@ -17,42 +18,70 @@
 
 ## Hướng dẫn cài đặt
 
+### Server
+
 ```bash
+# Di chuyển vào thư mục server
+cd server
+
 # Cài đặt các gói liên quan
 npm install
 
 # Tạo folder cho database
 mkdir -p db
 
-# Khởi chạy ứng dụng
+# Khởi chạy server
+npm start
+```
+
+### Client
+
+```bash
+# Di chuyển vào thư mục client
+cd client
+
+# Cài đặt các gói liên quan
+npm install
+
+# Khởi chạy client
 npm start
 ```
 
 ## Chạy bộ mô phỏng giá vàng
 
-Để chạy bộ mô phỏng cập nhật giá vàng (thay thế cho API thực tế), sử dụng lệnh sau trong một terminal khác:
+Để chạy bộ mô phỏng cập nhật giá vàng (thay thế cho API thực tế), sử dụng lệnh sau:
 
 ```bash
+# Di chuyển vào thư mục server
+cd server
+
+# Chạy bộ mô phỏng
 npm run simulate
 ```
 
 ## Sử dụng ứng dụng
 
-1. Mở trình duyệt và truy cập `http://localhost:8080/gold`
+### Xem giá vàng (Client)
+
+1. Mở trình duyệt và truy cập `http://localhost:3005`
 2. Trang web sẽ tự động cập nhật giá vàng mỗi 2 giây
 3. Khi giá vàng thay đổi, các phần tử sẽ được highlight và hiển thị mức thay đổi
+
+### Quản lý giá vàng (Server Admin)
+
+1. Mở trình duyệt và truy cập `http://localhost:3010/admin`
+2. Trang admin hiển thị giá vàng hiện tại và cho phép cập nhật giá mới
+3. Nhập giá mới và nhấn nút "Cập nhật giá vàng" để lưu thay đổi
 
 ## API Endpoints
 
 | Endpoint | Phương thức | Mục tiêu |
 |----------|:-----------:|----------|
-| /add | POST | Thêm/chỉnh sửa giá trị trong database |
-| /get/:id | GET | Trả về giá trị của một key |
-| /gold-prices | GET | Trả về giá của tất cả các loại vàng |
-| /update-gold | POST | Cập nhật giá vàng |
-| /gold | GET | Trang web theo dõi giá vàng |
-| /viewer/:id | GET | Trang web theo dõi giá trị của một key |
-
+| /api/add | POST | Thêm/chỉnh sửa giá trị trong database |
+| /api/get/:id | GET | Trả về giá trị của một key |
+| /api/gold-prices | GET | Trả về giá của tất cả các loại vàng |
+| /api/update-gold | POST | Cập nhật giá vàng |
+| /admin | GET | Trang web quản lý giá vàng |
 
 ## Yêu cầu triển khai
 | Mức độ | Mô tả |
