@@ -75,17 +75,7 @@ npm install
 npm start
 ```
 
-## Chạy bộ mô phỏng giá vàng
 
-Để chạy bộ mô phỏng cập nhật giá vàng (thay thế cho API thực tế), sử dụng lệnh sau:
-
-```bash
-# Di chuyển vào thư mục server
-cd server
-
-# Chạy bộ mô phỏng
-npm run simulate
-```
 
 ## Sử dụng ứng dụng
 
