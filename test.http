@@ -1,0 +1,11 @@
+POST http://localhost:3010/api/add
+    Content-Type: application/json
+
+   {
+     "type": "1",
+     "name": "VÀNG MIẾNG SJC",
+     "karat": "24k",
+     "purity": "999.9",
+     "buy_price": 12000000,
+     "sell_price": 99999999
+   }
