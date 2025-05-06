@@ -1,4 +1,5 @@
 // API service for interacting with the gold price server
+const fetch = require('node-fetch');
 
 const API_URL = 'http://localhost:3010/api';
 
@@ -94,8 +95,8 @@ async function addOrUpdateValue(key, value) {
     }
 }
 
-// Export the API functions
-export {
+// Export the API functions using CommonJS
+module.exports = {
     fetchGoldPrices,
     updateGoldPrices,
     getValueByKey,

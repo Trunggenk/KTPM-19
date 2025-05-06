@@ -7,8 +7,36 @@
 
 Ứng dụng được chia thành hai phần chính:
 
-1. **Server**: Chịu trách nhiệm lưu trữ và quản lý dữ liệu giá vàng, cung cấp API và giao diện admin
-2. **Client**: Ứng dụng web hiển thị giá vàng cho người dùng cuối
+1. **Server (Port 3010)**: 
+   - Chịu trách nhiệm lưu trữ và quản lý dữ liệu giá vàng
+   - Cung cấp API và giao diện admin
+   - Xử lý các request từ client API
+
+2. **Client (Port 3005)**: 
+   - Ứng dụng web hiển thị giá vàng cho người dùng cuối
+   - Kiến trúc 3 tầng:
+     - `api.js`: Giao tiếp trực tiếp với server
+     - `app.js`: Logic nghiệp vụ, xử lý dữ liệu 
+     - Frontend: Hiển thị dữ liệu cho người dùng
+
+### Kiến trúc Client
+
+Client được xây dựng theo mô hình 3 tầng:
+
+1. **Data Access Layer** (`api.js`):
+   - Chịu trách nhiệm giao tiếp với server
+   - Xử lý các request và response từ server
+   - Cung cấp interface thống nhất cho việc truy cập dữ liệu
+
+2. **Business Logic Layer** (`app.js`):
+   - Chứa logic nghiệp vụ của ứng dụng
+   - Sử dụng các hàm từ `api.js` để lấy dữ liệu
+   - Xử lý dữ liệu trước khi trả về cho frontend
+
+3. **Presentation Layer** (`public/app.js` + `public/index.html`):
+   - Hiển thị dữ liệu cho người dùng
+   - Xử lý tương tác người dùng
+   - Cập nhật giao diện theo thời gian thực
 
 ## Công nghệ sử dụng
 
