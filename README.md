@@ -120,6 +120,57 @@ Khi hệ thống Node.js phải xử lý quá nhiều người dùng đồng th�
 - Sử dụng goroutines và channels để tận dụng tối đa concurrent processing
 - Xử lý lỗi và graceful shutdown đảm bảo tính ổn định của hệ thống
 
+
+
+## 📐 Architecture Diagram
+
+<pre>
++------------+     +------------+     +------------+
+|  Client 1  |     |  Client 2  | ... |  Client M  |
++------------+     +------------+     +------------+
+       │                  │                    │
+       ▼                  ▼                    ▼
++-----------------------------------------------------+
+|                Subscriber Layer (Socket.IO)         |
+|  +------------+   +------------+   ...  +-----------+ |
+|  | Subscriber1|   | Subscriber2|        | SubscriberM| |
++-----------------------------------------------------+
+                          │
+                          │ subscribe/publish events
+                          ▼
++-----------------------------------------------------+
+|                    Server (Publisher)              |
+|                                                     |
+|  ┌─────────── Read Path ───────────┐                 |
+|  │ 1. GET data from Redis (cache) │                 |
+|  │ 2. If cache MISS:              │                 |
+|  │    • READ from SQL DB          │                 |
+|  │    • POPULATE Redis with result│                 |
+|  │ 3. RETURN payload to client    │                 |
+|  └──────────────────────────────────┘                 |
+|                                                     |
+|  ┌─────────── Write Path ──────────┐                 |
+|  │ 1. WRITE to SQL DB (persist)    │                 |
+|  │ 2. INVALIDATE (or UPDATE)       │                 |
+|  │    corresponding key in Redis   │                 |
+|  └──────────────────────────────────┘                 |
++-----------------------------------------------------+
+           │                 ▲
+    invalidate/update       │
+           ▼                 │
++----------------+           │
+|     Redis      |◀──────────┘
+|   (Cache)      |
++----------------+
+           │
+           │ on miss
+           ▼
++----------------------+
+|       SQL DB         |
+| (PostgreSQL/MySQL)   |
++----------------------+
+</pre>
+
 ### So sánh hiệu năng
 Phương thức đo khởi tạo nhiều kết nối và đo thời gian từ lúc /add cho đến khi toàn bộ ws nhận được dữ liệu
 
