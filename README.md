@@ -8,43 +8,8 @@ Cập nhật giá vàng từ NHNN, Bảo TÍN MINH CHÂU
 - Chỉ cập nhật database khi có thay đổi
 - Tối ưu hóa khả năng kết nối đồng thời nhiều thiết bị, đảm bảo cập nhật thời gian thực và sử dụng hiệu quả tài nguyên hệ thống.
 
-Hình ảnh hệ thống   
+**Hình ảnh hệ thống**
  ![alt text](test/image.png)
-
-Đã giải quyết: 
-- Triển khai WebSocket protocol để thay thế polling. Thay vì client gửi HTTP request mỗi 2 giây, server hiện push updates đến các client đã kết nối thông qua emit events chỉ khi data thay đổi, giảm đáng kể network traffic và server load.
-
-- **Cache-Aside Pattern**: Triển khai pattern này để tối ưu hóa việc truy xuất dữ liệu
-  ```
-  1. Khi client yêu cầu dữ liệu:
-     - Đầu tiên kiểm tra trong Redis cache
-     - Nếu có (cache hit), trả về dữ liệu ngay lập tức
-     - Nếu không có (cache miss), truy vấn từ SQLite
-     - Sau khi lấy từ DB, cập nhật lại Redis cache với TTL 24 giờ
-     
-  2. Khi cập nhật dữ liệu:
-     - Dữ liệu mới được publish qua Redis channel
-     - Cache được cập nhật tự động
-     - Database được cập nhật thông qua subscriber riêng biệt
-  ```
-  
-- **Cấu trúc cache đa tầng**: 
-  - Memory cache (trong ứng dụng Golang): Lưu trữ tức thời, truy xuất nhanh nhất
-  - Redis cache: Lưu trữ phân tán, chia sẻ giữa các instance
-  - SQLite DB: Lưu trữ lâu dài, nguồn dữ liệu chính thức
-
-- **Phân tích trường hợp cụ thể**: Thời gian phản hồi đã giảm từ ~300ms xuống còn ~5ms khi truy vấn dữ liệu đã được cache, giảm tải database khi có nhiều client kết nối đồng thời.
-
-
-
-### 2. Yêu cầu thời gian thực
-- Ban đầu hệ thống cần 2s để có thể nhận giá vàng mới 
-Giải quyết:- 
-**Redis Pub/Sub**: Triển khai hệ thống publish/subscribe với Redis để phân phối cập nhật hiệu quả
-- **Kênh phân tách**: Sử dụng hai kênh sub:
-  - `goldprices:updates`: Phân phối cập nhật đến tất cả WebSocket clients
-  - `gold-prices-db`: Chỉ dành cho cập nhật database, giảm tải cho DB
-- **Mutil instance**: Cho phép nhiều server instance cùng xử lý và phân phối cập nhật
 
 ## API Documentation
 
@@ -73,7 +38,6 @@ Giải quyết:-
 
 **Lưu ý**: 
 - ID và type đều có thể dùng để truy vấn giá vàng cụ thể
-- Dữ liệu được cache trên Redis và lưu trữ trong database
 - Cập nhật sẽ được tự động gửi đến tất cả clients thông qua WebSocket
 
 
@@ -120,8 +84,16 @@ Khi hệ thống Node.js phải xử lý quá nhiều người dùng đồng th�
 - Sử dụng goroutines và channels để tận dụng tối đa concurrent processing
 - Xử lý lỗi và graceful shutdown đảm bảo tính ổn định của hệ thống
 
+### Đã triển khai
+✅ Triển khai socket.io
 
+✅ Triển khai persistent bằng cách sử dụng ORM
 
+✅ Triển khai theo kiến trúc Publisher-Subscriber và cài đặt message broker
+
+✅ Giải quyết vấn đề nếu nhiều kết nối
+
+✅ Triển khai đo hiệu năng
 ## 📐 Architecture Diagram
 
 <pre>
