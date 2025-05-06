@@ -124,7 +124,7 @@ Khi hệ thống Node.js phải xử lý quá nhiều người dùng đồng th�
 Phương thức đo khởi tạo nhiều kết nối và đo thời gian từ lúc /add cho đến khi toàn bộ ws nhận được dữ liệu
 
 1. Ban đầu
-
+   ![alt text](test/test/latency_comparison_20250512_084026.png)
 
 
 2.server-nodejs

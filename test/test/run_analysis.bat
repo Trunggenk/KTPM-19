@@ -1,0 +1,13 @@
+@echo off
+echo Dang chuan bi chay phan tich hieu suat WebSocket...
+echo.
+echo Kiem tra va cai dat cac goi phu thuoc...
+pip install -r requirements.txt
+echo.
+echo Bat dau phan tich hieu suat WebSocket...
+python performance_visualization.py
+echo.
+echo Hoan thanh phan tich! Mo thu muc ket qua...
+start .\results\
+echo.
+pause 

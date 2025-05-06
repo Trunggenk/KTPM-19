@@ -1,0 +1,56 @@
+{
+    "nodejs_fetch": {
+        "10": {
+            "latency": 300,
+            "cpu_usage": 5
+        },
+        "100": {
+            "latency": 800,
+            "cpu_usage": 15
+        },
+        "1000": {
+            "latency": 2500,
+            "cpu_usage": 45
+        },
+        "10000": {
+            "latency": 8000,
+            "cpu_usage": 85
+        }
+    },
+    "nodejs_ws": {
+        "10": {
+            "latency": 50,
+            "cpu_usage": 3
+        },
+        "100": {
+            "latency": 150,
+            "cpu_usage": 10
+        },
+        "1000": {
+            "latency": 500,
+            "cpu_usage": 30
+        },
+        "10000": {
+            "latency": 2000,
+            "cpu_usage": 65
+        }
+    },
+    "golang_ws": {
+        "10": {
+            "latency": 5,
+            "cpu_usage": 2
+        },
+        "100": {
+            "latency": 20,
+            "cpu_usage": 5
+        },
+        "1000": {
+            "latency": 100,
+            "cpu_usage": 15
+        },
+        "10000": {
+            "latency": 500,
+            "cpu_usage": 35
+        }
+    }
+}
