@@ -16,9 +16,12 @@
     "express": "^4.21.2",
     "node-fetch": "^2.6.9",
     "path": "^0.12.7",
+    "redis": "^5.0.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
   }
-} 
+}
