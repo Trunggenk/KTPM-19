@@ -1,7 +1,8 @@
 # Ứng dụng Theo dõi Giá Vàng Thời Gian Thực
 
 Ứng dụng này cho phép người dùng theo dõi giá vàng Việt Nam theo thời gian thực, với các loại vàng khác nhau bao gồm SJC, vàng nhẫn SJC, và vàng các loại 24K, 18K, 14K, 9K.
-
+k
+d
 
 ## Cấu trúc ứng dụng
 
